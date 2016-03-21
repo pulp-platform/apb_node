@@ -22,36 +22,36 @@
 
 module apb_node
   #(
-    parameter NB_MASTER = `NB_MASTER,
+    parameter NB_MASTER = 8,
     parameter APB_DATA_WIDTH = 32,
     parameter APB_ADDR_WIDTH = 32
     )
    (
-    input logic                        ACLK_i,
-    input logic                        ARESETn_i,
+    input logic                                      ACLK_i,
+    input logic                                      ARESETn_i,
     
     // SLAVE PORT
-    input  logic                       PENABLE_i,
-    input  logic                       PWRITE_i,
-    input  logic [31:0]                PADDR_i,
-    input  logic [31:0]                PWDATA_i,
-    output logic [31:0]                PRDATA_o,
-    output logic                       PREADY_o,
-    output logic                       PSLVERR_o,
+    input  logic                                     PENABLE_i,
+    input  logic                                     PWRITE_i,
+    input  logic [31:0]                              PADDR_i,
+    input  logic [31:0]                              PWDATA_i,
+    output logic [31:0]                              PRDATA_o,
+    output logic                                     PREADY_o,
+    output logic                                     PSLVERR_o,
     
     // MASTER PORTS
-    output logic [NB_MASTER-1:0]       PENABLE_o,
-    output logic [NB_MASTER-1:0]       PWRITE_o,
-    output logic [NB_MASTER-1:0][31:0] PADDR_o,
-    output logic [NB_MASTER-1:0]       PSEL_o,
-    output logic [NB_MASTER-1:0][31:0] PWDATA_o,
-    input  logic [NB_MASTER-1:0][31:0] PRDATA_i,
-    input  logic [NB_MASTER-1:0]       PREADY_i,
-    input  logic [NB_MASTER-1:0]       PSLVERR_i,
+    output logic [NB_MASTER-1:0]                     PENABLE_o,
+    output logic [NB_MASTER-1:0]                     PWRITE_o,
+    output logic [NB_MASTER-1:0][31:0]               PADDR_o,
+    output logic [NB_MASTER-1:0]                     PSEL_o,
+    output logic [NB_MASTER-1:0][31:0]               PWDATA_o,
+    input  logic [NB_MASTER-1:0][31:0]               PRDATA_i,
+    input  logic [NB_MASTER-1:0]                     PREADY_i,
+    input  logic [NB_MASTER-1:0]                     PSLVERR_i,
     
     // CONFIGURATION PORT
-    input  logic [NB_MASTER-1:0]       START_ADDR_i,
-    input  logic [NB_MASTER-1:0]       END_ADDR_i,
+    input  logic [NB_MASTER-1:0][APB_ADDR_WIDTH-1:0] START_ADDR_i,
+    input  logic [NB_MASTER-1:0][APB_ADDR_WIDTH-1:0] END_ADDR_i
     
     );
    
@@ -71,13 +71,13 @@ module apb_node
 	// PENABLE GENERATION
 	for ( s_loop1 = 0; s_loop1 < NB_MASTER; s_loop1++ )
 	  begin
-	     if( PSEL_o[i] == 1'b1 )
+	     if( PSEL_o[s_loop1] == 1'b1 )
 	       begin
-		  PENABLE_o[i] = PENABLE_i;
+		  PENABLE_o[s_loop1] = PENABLE_i;
 	       end
 	     else
 	       begin
-		  PENABLE_o[i] = '0;
+		  PENABLE_o[s_loop1] = '0;
 	       end
 	  end
      end
@@ -87,13 +87,13 @@ module apb_node
      begin
 	for ( s_loop2 = 0; s_loop2 < NB_MASTER; s_loop2++ )
 	  begin
-	     if( PSEL_o[i] == 1'b1 )
+	     if( PSEL_o[s_loop2] == 1'b1 )
 	       begin
-		  PWRITE_o[i] = PWRITE_i;
+		  PWRITE_o[s_loop2] = PWRITE_i;
 	       end
 	     else
 	       begin
-		  PWRITE_o[i] = '0;
+		  PWRITE_o[s_loop2] = '0;
 	       end
 	  end
      end
@@ -103,13 +103,13 @@ module apb_node
      begin
 	for ( s_loop3 = 0; s_loop3 < NB_MASTER; s_loop3++ )
 	  begin
-	     if( PSEL_o[i] == 1'b1 )
+	     if( PSEL_o[s_loop3] == 1'b1 )
 	       begin
-		  PADDR_o[i] = PADDR_i;
+		  PADDR_o[s_loop3] = PADDR_i;
 	       end
 	     else
 	       begin
-		  PADDR_o[i] = '0;
+		  PADDR_o[s_loop3] = '0;
 	       end
 	  end
      end
@@ -119,13 +119,13 @@ module apb_node
      begin
 	for ( s_loop4 = 0; s_loop4 < NB_MASTER; s_loop4++ )
 	  begin
-	     if(PSEL_o[i] == 1'b1)
+	     if(PSEL_o[s_loop4] == 1'b1)
 	       begin
-		  PWDATA_o[i] = PWDATA_i;
+		  PWDATA_o[s_loop4] = PWDATA_i;
 	       end
 	     else
 	       begin
-		  PWDATA_o[i] = '0;
+		  PWDATA_o[s_loop4] = '0;
 	       end
 	  end
      end
@@ -136,9 +136,9 @@ module apb_node
 	PRDATA_o = '0;
 	for ( s_loop5 = 0; s_loop5 < NB_MASTER; s_loop5++ )
 	  begin
-	     if(PSEL_o[i] == 1'b1)
+	     if(PSEL_o[s_loop5] == 1'b1)
 	       begin
-		  PRDATA_o = PRDATA_i[i];
+		  PRDATA_o = PRDATA_i[s_loop5];
 	       end
 	  end
      end
@@ -149,9 +149,9 @@ module apb_node
 	PREADY_o = '0;
 	for ( s_loop6 = 0; s_loop6 < NB_MASTER; s_loop6++ )
 	  begin
-	     if(PSEL_o[i] == 1'b1)
+	     if(PSEL_o[s_loop6] == 1'b1)
 	       begin
-		  PRREADY_o = PRREADY_i[i];
+		  PREADY_o = PREADY_i[s_loop6];
 	       end
 	  end
      end
@@ -162,9 +162,9 @@ module apb_node
 	PSLVERR_o = '0;
 	for ( s_loop7 = 0; s_loop7 < NB_MASTER; s_loop7++ )
 	  begin
-	     if(PSEL_o[i] == 1'b1)
+	     if(PSEL_o[s_loop7] == 1'b1)
 	       begin
-		  PSLVERR_o = PSLVERR_i[i];
+		  PSLVERR_o = PSLVERR_i[s_loop7];
 	       end
 	  end
      end

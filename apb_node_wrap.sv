@@ -27,18 +27,18 @@ module apb_node_wrap
     parameter APB_ADDR_WIDTH = 32
     )
    (
-    input logic                        clk_i,
-    input logic                        rst_ni,
+    input logic                                      clk_i,
+    input logic                                      rst_ni,
     
     // SLAVE PORT
-    APB_BUS.Slave                      apb_slave,
+    APB_BUS.Slave                                    apb_slave,
     
     // MASTER PORTS
-    APB_BUS[NB_MASTER-1:0].Master      apb_masters,
+    APB_BUS.Master                                   apb_masters[NB_MASTER-1:0],
     
     // CONFIGURATION PORT
-    input  logic [NB_MASTER-1:0]       start_addr_i,
-    input  logic [NB_MASTER-1:0]       end_addr_i
+    input  logic [NB_MASTER-1:0][APB_ADDR_WIDTH-1:0] start_addr_i,
+    input  logic [NB_MASTER-1:0][APB_ADDR_WIDTH-1:0] end_addr_i
     );
    
    genvar 			       i;
@@ -56,14 +56,14 @@ module apb_node_wrap
    generate
       for(i=0;i<NB_MASTER;i++)
 	begin
-	   assign apb_master[i].PENABLE = PENABLE[i];
-           assign apb_master[i].PWRITE  = PWRITE[i];
-           assign apb_master[i].PADDR   = PADDR[i];
-           assign apb_master[i].PSEL    = PSEL[i];
-           assign apb_master[i].PWDATA  = PWDATA[i];
-	   assign PRDATA[i]             = apb_master[i].PRDATA;
-	   assign PRREADY[i]            = apb_master[i].PRREADY;
-	   assign PSLVERR[i]            = apb_master[i].PSLVERR;
+	   assign apb_masters[i].PENABLE = PENABLE[i];
+           assign apb_masters[i].PWRITE  = PWRITE[i];
+           assign apb_masters[i].PADDR   = PADDR[i];
+           assign apb_masters[i].PSEL    = PSEL[i];
+           assign apb_masters[i].PWDATA  = PWDATA[i];
+	   assign PRDATA[i]              = apb_masters[i].PRDATA;
+	   assign PREADY[i]              = apb_masters[i].PREADY;
+	   assign PSLVERR[i]             = apb_masters[i].PSLVERR;
 	end
    endgenerate
    
@@ -86,14 +86,14 @@ module apb_node_wrap
       .PREADY_o(apb_slave.PREADY),
       .PSLVERR_o(apb_slave.PSLVERR),
       
-      .PENABLE_o(PENABLE[i]),
-      .PWRITE_o(PWRITE[i]),
-      .PADDR_o(PADDR[i]),
-      .PSEL_o(PSEL[i]),
-      .PWDATA_o(PWDATA[i]),
-      .PRDATA_i(PRDATA[i]),
-      .PREADY_i(PRREADY[i]),
-      .PSLVERR_i(PSLVERR[i]),
+      .PENABLE_o(PENABLE),
+      .PWRITE_o(PWRITE),
+      .PADDR_o(PADDR),
+      .PSEL_o(PSEL),
+      .PWDATA_o(PWDATA),
+      .PRDATA_i(PRDATA),
+      .PREADY_i(PREADY),
+      .PSLVERR_i(PSLVERR),
       
       .START_ADDR_i(start_addr_i),
       .END_ADDR_i(end_addr_i)
