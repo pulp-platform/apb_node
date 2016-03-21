@@ -1,0 +1,5 @@
+apb_uart:
+  files: [
+    apb_node.sv,
+    apb_node_wrap.sv,
+  ]
