@@ -43,27 +43,27 @@ module apb_node_wrap
    
    genvar 			       i;
    
-   logic [NB_MASTER-1:0] 	       PENABLE;
-   logic [NB_MASTER-1:0] 	       PWRITE;
-   logic [NB_MASTER-1:0][31:0] 	       PADDR;
-   logic [NB_MASTER-1:0] 	       PSEL;
-   logic [NB_MASTER-1:0][31:0] 	       PWDATA;
-   logic [NB_MASTER-1:0][31:0] 	       PRDATA;
-   logic [NB_MASTER-1:0] 	       PREADY;
-   logic [NB_MASTER-1:0] 	       PSLVERR;
+   logic [NB_MASTER-1:0] 	       penable;
+   logic [NB_MASTER-1:0] 	       pwrite;
+   logic [NB_MASTER-1:0][31:0] 	       paddr;
+   logic [NB_MASTER-1:0] 	       psel;
+   logic [NB_MASTER-1:0][31:0] 	       pwdata;
+   logic [NB_MASTER-1:0][31:0] 	       prdata;
+   logic [NB_MASTER-1:0] 	       pready;
+   logic [NB_MASTER-1:0] 	       pslverr;
    
    // GENERATE SEL SIGNAL FOR MASTER MATCHING THE ADDRESS
    generate
       for(i=0;i<NB_MASTER;i++)
 	begin
-	   assign apb_masters[i].PENABLE = PENABLE[i];
-           assign apb_masters[i].PWRITE  = PWRITE[i];
-           assign apb_masters[i].PADDR   = PADDR[i];
-           assign apb_masters[i].PSEL    = PSEL[i];
-           assign apb_masters[i].PWDATA  = PWDATA[i];
-	   assign PRDATA[i]              = apb_masters[i].PRDATA;
-	   assign PREADY[i]              = apb_masters[i].PREADY;
-	   assign PSLVERR[i]             = apb_masters[i].PSLVERR;
+	   assign apb_masters[i].penable = penable[i];
+           assign apb_masters[i].pwrite  = pwrite[i];
+           assign apb_masters[i].paddr   = paddr[i];
+           assign apb_masters[i].psel    = psel[i];
+           assign apb_masters[i].pwdata  = pwdata[i];
+	   assign prdata[i]              = apb_masters[i].prdata;
+	   assign pready[i]              = apb_masters[i].pready;
+	   assign pslverr[i]             = apb_masters[i].pslverr;
 	end
    endgenerate
    
@@ -75,25 +75,23 @@ module apb_node_wrap
        )
    apb_node_i
      (
-      .ACLK_i(clk_i),
-      .ARESETn_i(rst_ni),
       
-      .PENABLE_i(apb_slave.PENABLE),
-      .PWRITE_i(apb_slave.PWRITE),
-      .PADDR_i(apb_slave.PADDR),
-      .PWDATA_i(apb_slave.PWDATA),
-      .PRDATA_o(apb_slave.PRDATA),
-      .PREADY_o(apb_slave.PREADY),
-      .PSLVERR_o(apb_slave.PSLVERR),
+      .penable_i(apb_slave.penable),
+      .pwrite_i(apb_slave.pwrite),
+      .paddr_i(apb_slave.paddr),
+      .pwdata_i(apb_slave.pwdata),
+      .prdata_o(apb_slave.prdata),
+      .pready_o(apb_slave.pready),
+      .pslverr_o(apb_slave.pslverr),
       
-      .PENABLE_o(PENABLE),
-      .PWRITE_o(PWRITE),
-      .PADDR_o(PADDR),
-      .PSEL_o(PSEL),
-      .PWDATA_o(PWDATA),
-      .PRDATA_i(PRDATA),
-      .PREADY_i(PREADY),
-      .PSLVERR_i(PSLVERR),
+      .penable_o(penable),
+      .pwrite_o(pwrite),
+      .paddr_o(paddr),
+      .psel_o(psel),
+      .pwdata_o(pwdata),
+      .prdata_i(prdata),
+      .pready_i(pready),
+      .pslverr_i(pslverr),
       
       .START_ADDR_i(start_addr_i),
       .END_ADDR_i(end_addr_i)
