@@ -29,44 +29,44 @@ module apb_node_wrap
    (
     input logic                                      clk_i,
     input logic                                      rst_ni,
-    
+
     // SLAVE PORT
     APB_BUS.Slave                                    apb_slave,
-    
+
     // MASTER PORTS
     APB_BUS.Master                                   apb_masters[NB_MASTER-1:0],
-    
+
     // CONFIGURATION PORT
     input  logic [NB_MASTER-1:0][APB_ADDR_WIDTH-1:0] start_addr_i,
     input  logic [NB_MASTER-1:0][APB_ADDR_WIDTH-1:0] end_addr_i
     );
-   
-   genvar 			       i;
-   
-   logic [NB_MASTER-1:0] 	       penable;
-   logic [NB_MASTER-1:0] 	       pwrite;
-   logic [NB_MASTER-1:0][31:0] 	       paddr;
-   logic [NB_MASTER-1:0] 	       psel;
-   logic [NB_MASTER-1:0][31:0] 	       pwdata;
-   logic [NB_MASTER-1:0][31:0] 	       prdata;
-   logic [NB_MASTER-1:0] 	       pready;
-   logic [NB_MASTER-1:0] 	       pslverr;
-   
+
+   genvar                              i;
+
+   logic [NB_MASTER-1:0]               penable;
+   logic [NB_MASTER-1:0]               pwrite;
+   logic [NB_MASTER-1:0][31:0]         paddr;
+   logic [NB_MASTER-1:0]               psel;
+   logic [NB_MASTER-1:0][31:0]         pwdata;
+   logic [NB_MASTER-1:0][31:0]         prdata;
+   logic [NB_MASTER-1:0]               pready;
+   logic [NB_MASTER-1:0]               pslverr;
+
    // GENERATE SEL SIGNAL FOR MASTER MATCHING THE ADDRESS
    generate
       for(i=0;i<NB_MASTER;i++)
-	begin
-	   assign apb_masters[i].penable = penable[i];
+        begin
+           assign apb_masters[i].penable = penable[i];
            assign apb_masters[i].pwrite  = pwrite[i];
            assign apb_masters[i].paddr   = paddr[i];
            assign apb_masters[i].psel    = psel[i];
            assign apb_masters[i].pwdata  = pwdata[i];
-	   assign prdata[i]              = apb_masters[i].prdata;
-	   assign pready[i]              = apb_masters[i].pready;
-	   assign pslverr[i]             = apb_masters[i].pslverr;
-	end
+           assign prdata[i]              = apb_masters[i].prdata;
+           assign pready[i]              = apb_masters[i].pready;
+           assign pslverr[i]             = apb_masters[i].pslverr;
+        end
    endgenerate
-   
+
    apb_node
      #(
        .NB_MASTER(NB_MASTER),
@@ -75,7 +75,7 @@ module apb_node_wrap
        )
    apb_node_i
      (
-      
+
       .penable_i(apb_slave.penable),
       .pwrite_i(apb_slave.pwrite),
       .paddr_i(apb_slave.paddr),
@@ -83,7 +83,7 @@ module apb_node_wrap
       .prdata_o(apb_slave.prdata),
       .pready_o(apb_slave.pready),
       .pslverr_o(apb_slave.pslverr),
-      
+
       .penable_o(penable),
       .pwrite_o(pwrite),
       .paddr_o(paddr),
@@ -92,9 +92,9 @@ module apb_node_wrap
       .prdata_i(prdata),
       .pready_i(pready),
       .pslverr_i(pslverr),
-      
+
       .START_ADDR_i(start_addr_i),
       .END_ADDR_i(end_addr_i)
       );
-   
+
 endmodule
