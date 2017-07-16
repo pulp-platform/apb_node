@@ -37,14 +37,14 @@ module apb_node_wrap #(
         input  logic [NB_MASTER-1:0][APB_ADDR_WIDTH-1:0] end_addr_i
     );
 
-    logic [NB_MASTER-1:0]       penable;
-    logic [NB_MASTER-1:0]       pwrite;
-    logic [NB_MASTER-1:0][31:0] paddr;
-    logic [NB_MASTER-1:0]       psel;
-    logic [NB_MASTER-1:0][31:0] pwdata;
-    logic [NB_MASTER-1:0][31:0] prdata;
-    logic [NB_MASTER-1:0]       pready;
-    logic [NB_MASTER-1:0]       pslverr;
+    logic [NB_MASTER-1:0]                     penable;
+    logic [NB_MASTER-1:0]                     pwrite;
+    logic [NB_MASTER-1:0][APB_ADDR_WIDTH-1:0] paddr;
+    logic [NB_MASTER-1:0]                     psel;
+    logic [NB_MASTER-1:0][APB_DATA_WIDTH-1:0] pwdata;
+    logic [NB_MASTER-1:0][APB_DATA_WIDTH-1:0] prdata;
+    logic [NB_MASTER-1:0]                     pready;
+    logic [NB_MASTER-1:0]                     pslverr;
 
     genvar i;
     generate
