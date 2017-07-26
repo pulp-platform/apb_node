@@ -60,6 +60,7 @@ module apb_node #(
 
     always_comb begin
         // default assignment - keep silent by default
+        penable_o = '0;
         pwrite_o  = '0;
         paddr_o   = '0;
         pwdata_o  = '0;
