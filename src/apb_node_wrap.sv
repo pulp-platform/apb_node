@@ -8,7 +8,6 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the
 // specific language governing permissions and limitations under the License.
 
-// -----------------------------------------------------------------------------
 // Engineer:       Davide Rossi - davide.rossi@unibo.it
 //                 Florian Zaruba - zarubaf@iis.ee.ethz.ch
 // Design Name:    APB Bus
@@ -17,15 +16,12 @@
 // Language:       SystemVerilog
 //
 // Description:    This component implements a wrapper for a configurable APB node
-//
-// -----------------------------------------------------------------------------
 
 module apb_node_wrap #(
         parameter int unsigned NB_MASTER      = 8,
         parameter int unsigned APB_DATA_WIDTH = 32,
         parameter int unsigned APB_ADDR_WIDTH = 32
-    )
-    (
+)(
         input logic                                      clk_i,
         input logic                                      rst_ni,
         // Slave Port
@@ -46,19 +42,16 @@ module apb_node_wrap #(
     logic [NB_MASTER-1:0]                     pready;
     logic [NB_MASTER-1:0]                     pslverr;
 
-    genvar i;
-    generate
-        for ( i = 0; i < NB_MASTER; i++) begin
-            assign apb_masters[i].penable = penable[i];
-            assign apb_masters[i].pwrite  = pwrite[i];
-            assign apb_masters[i].paddr   = paddr[i];
-            assign apb_masters[i].psel    = psel[i];
-            assign apb_masters[i].pwdata  = pwdata[i];
-            assign prdata[i]              = apb_masters[i].prdata;
-            assign pready[i]              = apb_masters[i].pready;
-            assign pslverr[i]             = apb_masters[i].pslverr;
-        end
-    endgenerate
+    for (genvar i = 0; i < NB_MASTER; i++) begin
+        assign apb_masters[i].penable = penable[i];
+        assign apb_masters[i].pwrite  = pwrite[i];
+        assign apb_masters[i].paddr   = paddr[i];
+        assign apb_masters[i].psel    = psel[i];
+        assign apb_masters[i].pwdata  = pwdata[i];
+        assign prdata[i]              = apb_masters[i].prdata;
+        assign pready[i]              = apb_masters[i].pready;
+        assign pslverr[i]             = apb_masters[i].pslverr;
+    end
 
     apb_node #(
         .NB_MASTER      ( NB_MASTER         ),

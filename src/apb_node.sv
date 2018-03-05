@@ -8,7 +8,6 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the
 // specific language governing permissions and limitations under the License.
 
-// -----------------------------------------------------------------------------
 // Engineer:       Davide Rossi - davide.rossi@unibo.it
 //                 Florian Zaruba - zarubaf@iis.ee.ethz.ch
 // Design Name:    APB Bus
@@ -17,15 +16,12 @@
 // Language:       SystemVerilog
 //
 // Description:    This component implements a configurable APB node
-//
-// -----------------------------------------------------------------------------
 
 module apb_node #(
         parameter int unsigned NB_MASTER      = 8,
         parameter int unsigned APB_DATA_WIDTH = 32,
         parameter int unsigned APB_ADDR_WIDTH = 32
-    )
-    (
+)(
         // SLAVE PORT
         input  logic                                     penable_i,
         input  logic                                     pwrite_i,
