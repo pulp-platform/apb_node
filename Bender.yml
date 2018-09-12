@@ -3,7 +3,7 @@ package:
   authors: ["Florian Zaruba <zarubaf@iis.ee.ethz.ch>, Davide Rossi <davide.rossi@unibo.it>"]
 
 dependencies:
-    apb: { git: "git@iis-git.ee.ethz.ch:sasa/apb.git", rev: master }
+    apb: { git: "https://github.com/pulp-platform/apb.git", version:  0.1.0 }
 
 sources:
   - src/apb_node.sv
