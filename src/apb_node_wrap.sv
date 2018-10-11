@@ -61,6 +61,7 @@ module apb_node_wrap #(
         .penable_i      ( apb_slave.penable ),
         .pwrite_i       ( apb_slave.pwrite  ),
         .paddr_i        ( apb_slave.paddr   ),
+	.psel_i         ( apb_slave.psel    ),
         .pwdata_i       ( apb_slave.pwdata  ),
         .prdata_o       ( apb_slave.prdata  ),
         .pready_o       ( apb_slave.pready  ),

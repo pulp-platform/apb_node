@@ -23,27 +23,28 @@ module apb_node #(
         parameter int unsigned APB_ADDR_WIDTH = 32
 )(
         // SLAVE PORT
-        input  logic                                     penable_i,
-        input  logic                                     pwrite_i,
-        input  logic [APB_ADDR_WIDTH-1:0]                paddr_i,
-        input  logic [APB_DATA_WIDTH-1:0]                pwdata_i,
-        output logic [APB_DATA_WIDTH-1:0]                prdata_o,
-        output logic                                     pready_o,
-        output logic                                     pslverr_o,
+        input logic 					 penable_i,
+        input logic 					 pwrite_i,
+        input logic [APB_ADDR_WIDTH-1:0] 		 paddr_i,
+        input logic                                      psel_i,
+        input logic [APB_DATA_WIDTH-1:0] 		 pwdata_i,
+        output logic [APB_DATA_WIDTH-1:0] 		 prdata_o,
+        output logic 					 pready_o,
+        output logic 					 pslverr_o,
 
         // MASTER PORTS
-        output logic [NB_MASTER-1:0]                     penable_o,
-        output logic [NB_MASTER-1:0]                     pwrite_o,
+        output logic [NB_MASTER-1:0] 			 penable_o,
+        output logic [NB_MASTER-1:0] 			 pwrite_o,
         output logic [NB_MASTER-1:0][APB_ADDR_WIDTH-1:0] paddr_o,
-        output logic [NB_MASTER-1:0]                     psel_o,
+        output logic [NB_MASTER-1:0] 			 psel_o,
         output logic [NB_MASTER-1:0][APB_DATA_WIDTH-1:0] pwdata_o,
-        input  logic [NB_MASTER-1:0][APB_DATA_WIDTH-1:0] prdata_i,
-        input  logic [NB_MASTER-1:0]                     pready_i,
-        input  logic [NB_MASTER-1:0]                     pslverr_i,
+        input logic [NB_MASTER-1:0][APB_DATA_WIDTH-1:0]  prdata_i,
+        input logic [NB_MASTER-1:0] 			 pready_i,
+        input logic [NB_MASTER-1:0] 			 pslverr_i,
 
         // CONFIGURATION PORT
-        input  logic [NB_MASTER-1:0][APB_ADDR_WIDTH-1:0] START_ADDR_i,
-        input  logic [NB_MASTER-1:0][APB_ADDR_WIDTH-1:0] END_ADDR_i
+        input logic [NB_MASTER-1:0][APB_ADDR_WIDTH-1:0]  START_ADDR_i,
+        input logic [NB_MASTER-1:0][APB_ADDR_WIDTH-1:0]  END_ADDR_i
     );
 
     always_comb begin : match_address
@@ -51,7 +52,7 @@ module apb_node #(
 
         // generate the select signal based on the supplied address
         for (int unsigned i = 0; i < NB_MASTER; i++)
-            psel_o[i]  =  (paddr_i >= START_ADDR_i[i]) && (paddr_i <= END_ADDR_i[i]);
+            psel_o[i]  =  psel_i & (paddr_i >= START_ADDR_i[i]) && (paddr_i <= END_ADDR_i[i]);
     end
 
     always_comb begin
