@@ -42,7 +42,9 @@ module apb_node_wrap #(
     logic [NB_MASTER-1:0]                     pready;
     logic [NB_MASTER-1:0]                     pslverr;
 
-    for (genvar i = 0; i < NB_MASTER; i++) begin
+    generate
+    genvar i;
+    for (i = 0; i < NB_MASTER; i++) begin : GEN_ASSIGN_MASTERS
         assign apb_masters[i].penable = penable[i];
         assign apb_masters[i].pwrite  = pwrite[i];
         assign apb_masters[i].paddr   = paddr[i];
@@ -52,6 +54,7 @@ module apb_node_wrap #(
         assign pready[i]              = apb_masters[i].pready;
         assign pslverr[i]             = apb_masters[i].pslverr;
     end
+    endgenerate
 
     apb_node #(
         .NB_MASTER      ( NB_MASTER         ),
