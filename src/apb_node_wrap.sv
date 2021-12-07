@@ -25,9 +25,9 @@ module apb_node_wrap #(
         input logic                                      clk_i,
         input logic                                      rst_ni,
         // Slave Port
-        APB_BUS.Slave                                    apb_slave,
+        APB.Slave                                        apb_slave,
         // Master Ports
-        APB_BUS.Master                                   apb_masters [NB_MASTER-1:0],
+        APB.Master                                       apb_masters [NB_MASTER-1:0],
         // Configuration Port
         input  logic [NB_MASTER-1:0][APB_ADDR_WIDTH-1:0] start_addr_i,
         input  logic [NB_MASTER-1:0][APB_ADDR_WIDTH-1:0] end_addr_i
@@ -61,7 +61,7 @@ module apb_node_wrap #(
         .penable_i      ( apb_slave.penable ),
         .pwrite_i       ( apb_slave.pwrite  ),
         .paddr_i        ( apb_slave.paddr   ),
-	.psel_i         ( apb_slave.psel    ),
+	      .psel_i         ( apb_slave.psel    ),
         .pwdata_i       ( apb_slave.pwdata  ),
         .prdata_o       ( apb_slave.prdata  ),
         .pready_o       ( apb_slave.pready  ),
